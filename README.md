@@ -5,3 +5,6 @@ Design and develop an architecture for an email classifier. multi-label classifi
 
 # npm install
 pip install pandas numpy stanza transformers scikit-learn
+
+# run
+python main.py
