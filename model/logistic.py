@@ -24,11 +24,10 @@ class Logistic(BaseModel):
         self.model.fit(data.X_train, data.y_train)
 
     def predict(self, X_test):
-        self.y_pred = self.model.predict(X_test)
+        self.predictions = self.model.predict(X_test)
 
     def print_results(self, data):
-        # 
-        super().print_results(data)
+        print(classification_report(data.y_test, self.predictions))
 
     def data_transform(self, X):
         # Convert sparse to dense

@@ -27,19 +27,19 @@ class RandomForest(BaseModel):
         self.y = y
         self.mdl = RandomForestClassifier(n_estimators=1000, random_state=seed, class_weight='balanced_subsample')
         self.predictions = None
-        self.data_transform()
+        #self.data_transform()
 
     def train(self, data) -> None:
         self.mdl = self.mdl.fit(data.X_train, data.y_train)
 
     def predict(self, X_test: pd.Series):
-        predictions = self.mdl.predict(X_test)
-        self.predictions = predictions
+        X_test = self.data_transform(X_test)
+        self.predictions = self.mdl.predict(X_test)
 
     def print_results(self, data):
         print(classification_report(data.y_test, self.predictions))
 
+    def data_transform(self, X): 
+        return X
 
-    def data_transform(self) -> None:
-        ...
 
