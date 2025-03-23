@@ -2,8 +2,9 @@ from model.randomforest import RandomForest
 from embeddings import get_tfidf_embeddings
 from modelling.data_model import Data
 import pandas as pd
+from model.logistic import Logistic
 
-# 
+# RandomForest
 def model_predict(data, df, name):
     results = []
     print("RandomForest")
@@ -47,7 +48,11 @@ def train_chained_model(df):
             continue
 
         # Initialize and train model
+        # 1.RandomForest
         model = RandomForest(model_name=f"RandomForest_{label}", embeddings=X, y=y)
+        # 2.LogisticRegression
+        # model = Logistic(model_name=f"Logistic_{label}", embeddings=X, y=y)
+
         model.train(data)
 
         # Predict and print evaluation results
