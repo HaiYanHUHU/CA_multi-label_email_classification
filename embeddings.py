@@ -37,7 +37,7 @@ def get_tfidf_embeddings(df: pd.DataFrame, label_col: str):
     df = df[df[label_col].notna() & (df[label_col] != '')]
 
     # Extract text and label columns
-    texts = df[Config.INTERACTION_CONTENT].values.astype('U')
+    texts = (df[Config.TICKET_SUMMARY] + ' ' + df[Config.INTERACTION_CONTENT]).values.astype('U')
     labels = df[label_col].values.astype('U')
 
     # Transform text into TF-IDF vectors
