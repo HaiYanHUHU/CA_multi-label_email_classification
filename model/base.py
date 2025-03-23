@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 import pandas as pd
 import numpy as np
+from sklearn.metrics import classification_report
 
 
 class BaseModel(ABC):
@@ -35,3 +36,11 @@ class BaseModel(ABC):
         self.__dict__.update(self.defaults)
         self.__dict__.update(values)
         return self
+
+    
+    def print_results(self, data):
+        """
+        Print classification report comparing true vs predicted labels.
+        """
+        print(f"\nResults for model: {self.__class__.__name__}")
+        print(classification_report(data.y_test, self.y_pred))

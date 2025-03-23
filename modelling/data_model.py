@@ -23,7 +23,8 @@ class Data():
             return
 
         y_good = y[y_series.isin(good_y_value)]
-        X_good = X[y_series.isin(good_y_value)]
+        X_good = X[y_series.isin(good_y_value).values]
+
 
         new_test_size = X.shape[0] * 0.2 / X_good.shape[0]
 
