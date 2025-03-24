@@ -1,12 +1,18 @@
 from model.randomforest import RandomForest
 from embeddings import get_tfidf_embeddings
-from modelling.data_model import Data
+from model.data_model import Data
 import pandas as pd
 import numpy as np
-from model.logistic import Logistic
+
 
 # RandomForest
 def model_predict(data, df, name):
+    """
+    feat.1: ...training and testing of ML models and vice versa...
+    :param data: training data
+    :param df: unused
+    :param name: unused
+    """
     results = []
     print("RandomForest")
     model = RandomForest("RandomForest", data.get_embeddings(), data.get_type())

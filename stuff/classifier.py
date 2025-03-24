@@ -24,7 +24,7 @@ class BaseClassifier(abc.ABC):
         self._check()
         return self.classifier.predict(X)
 
-    def evaluate(self)-> dict:
+    def evaluate(self):
         self._check()
         y_pred = self.classifier.predict(self.dataset.X_test)
-        return classification_report(self.dataset.y_test, y_pred, output_dict=True)
+        return classification_report(self.dataset.y_test, y_pred)
