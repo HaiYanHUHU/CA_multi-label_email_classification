@@ -16,8 +16,12 @@ class Dataset:
         :param y: str representing a column in the dataframe used as a dependent variable
         :param split: float percentage of data to perform a test split
         """
-        self.df = df.copy()
+
+        self.df = df.reset_index(drop=True).copy()
         self.x = (x,) if isinstance(x, str) else x
+
+        assert len(df[df[list(self.x)].isna().any(axis=1)]) == 0, "nan values in x columns"
+
         self.y = y
         self.split_ = split
         self.vectorisers = {}
@@ -65,8 +69,17 @@ class Dataset:
 
         l.extend(x_cols)
 
+        assert len(tfidf_df[tfidf_df.isna().any(axis=1)]) == 0, "tfid error"
+
         self.x = tuple(l)
-        self.df = pd.concat([self.df.drop(col, axis=1), tfidf_df], axis=1)
+
+        ll = len(self.df)
+        assert ll == len(tfidf_df)
+
+        self.df = pd.concat([self.df, tfidf_df], axis=1)
+
+        assert len(self.df) == ll, "index misalignment"
+
         self.vectorisers[col] = vec
 
     def devectorise(self, col: str, encoded: t.Sequence[int]) -> str:

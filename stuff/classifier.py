@@ -12,13 +12,19 @@ class BaseClassifier(abc.ABC):
         self.dataset = dataset
         self.name = self.__class__.__name__ if name is None else name
 
+    def _check(self):
+        assert self.dataset.is_ready(), "dataset is not ready"
+
     def train(self):
+        self._check()
         self.classifier.fit(self.dataset.X_train, self.dataset.y_train)
         return self
 
     def predict(self, X: t.Iterable):
+        self._check()
         return self.classifier.predict(X)
 
-    def evaluate(self):
+    def evaluate(self)-> dict:
+        self._check()
         y_pred = self.classifier.predict(self.dataset.X_test)
-        return classification_report(self.dataset.y_test, y_pred)
+        return classification_report(self.dataset.y_test, y_pred, output_dict=True)
