@@ -33,9 +33,10 @@ class Dataset:
 
     def tuplefy(self, cols: tuple[str]) -> None:
         """
-        Tuplefy
-        :param cols:
-        :return:
+        transforms columns into a tuple, then into an integer
+
+        :param cols: columns to tuplify
+        :return: None
         """
         oe = ObjectEncoder()
         tuples = list(zip(*(self.df[col] for col in cols)))
@@ -44,10 +45,10 @@ class Dataset:
 
     def detuplefy(self, orig: tuple[str], encoded: int) -> tuple:
         """
-        Detuplefy
-        :param orig:
-        :param encoded:
-        :return:
+        decodes an integer into a tuple
+        :param orig: original col definition
+        :param encoded: int encoded tuple
+        :return: tuple original tuple
         """
         return self.obj_encoders[orig].classes_[encoded]
 
