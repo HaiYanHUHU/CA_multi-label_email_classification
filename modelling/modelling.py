@@ -39,9 +39,9 @@ def train_chained_model(df):
         X, y, df_label = get_tfidf_embeddings(df_label, 'y')
 
         #1.RandomForest
-        model = RandomForest(model_name=f"RandomForest_{label}", embeddings=X, y=y)
+        # model = RandomForest(model_name=f"RandomForest_{label}", embeddings=X, y=y)
         # 2.LogisticRegression
-        #model = Logistic(model_name=f"Logistic_{label}", embeddings=X, y=y)
+        model = Logistic(model_name=f"Logistic_{label}", embeddings=X, y=y)
 
         X_transformed = model.data_transform(X)
         data = Data(X_transformed, pd.DataFrame({'y': y}))
