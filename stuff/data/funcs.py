@@ -1,8 +1,7 @@
 import pandas as pd
 import typing as t
-from config import Config
 import re
-
+from config import Config
 
 def get_input_data(filename: t.Union[t.Sequence[str], str]) -> pd.DataFrame:
     """
@@ -21,6 +20,8 @@ def get_input_data(filename: t.Union[t.Sequence[str], str]) -> pd.DataFrame:
     df.rename({
         Config.TICKET_SUMMARY_COL: "summary",
         Config.INTERACTION_CONTENT_COL: "content",
+        "Ticket id": "ticket_id",
+        "Interaction id": "interaction_id",
         "Type 1": "y1",
         "Type 2": "y2",
         "Type 3": "y3",
@@ -28,13 +29,28 @@ def get_input_data(filename: t.Union[t.Sequence[str], str]) -> pd.DataFrame:
     }, axis=1, inplace=True)
 
     # Select important columns
-    df = df[["summary", "content", "y1", "y2", "y3", "y4"]]
+    df = df[['ticket_id','interaction_id', "summary", "content", "y1", "y2", "y3", "y4"]]
+
+    # fill
+    df['summary'] = df['summary'].fillna(df['y4']) # .fillna(df['y3'])....
+
+    # remove nan
+    df = df[ df['content'].notna() ]
 
     # Rebuilds index
     df.reset_index(drop=True, inplace=True)
 
     return df
 
+def pre_process(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    applies all preprocessing steps in order
+    :param df: dataframe from get_input_data
+    :return: pd.DataFrame
+    """
+    df = de_duplicate(df)
+    df = remove_noise(df)
+    return df
 
 def prime_column(s: pd.Series, replace: t.Sequence[t.Tuple[str, str]]) -> pd.Series:
     """
@@ -115,9 +131,8 @@ def remove_noise(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def de_duplicate(df: pd.DataFrame) -> pd.DataFrame:
-
-    df["ic_deduplicated"] = ""
+def de_duplicate(data: pd.DataFrame) -> pd.DataFrame:
+    data["ic_deduplicated"] = ""
 
     cu_template = {
         "english":
@@ -169,18 +184,18 @@ def de_duplicate(df: pd.DataFrame) -> pd.DataFrame:
 
     # -------- start processing ticket data
 
-    tickets = df["Ticket id"].value_counts()
+    tickets = data["ticket_id"].value_counts()
 
     for t in tickets.index:
-        # print(t)
-        df = df.loc[df['Ticket id'] == t,]
+        #print(t)
+        df = data.loc[data['ticket_id'] == t,]
 
         # for one ticket content data
         ic_set = set([])
         ic_deduplicated = []
-        for ic in df["interaction"]:
+        for ic in df["content"]:
 
-            # print(ic)
+            #print(ic)
 
             ic_r = re.split(split_pattern, ic)
             # ic_r = sum(ic_r, [])
@@ -202,11 +217,10 @@ def de_duplicate(df: pd.DataFrame) -> pd.DataFrame:
                         i = i + "\n"
                         ic_current = ic_current + [i]
 
-            # print(ic_current)
+            #print(ic_current)
             ic_deduplicated = ic_deduplicated + [' '.join(ic_current)]
-        df.loc[df["Ticket id"] == t, "ic_deduplicated"] = ic_deduplicated
-
-
-    df["interaction"] = df['ic_deduplicated']
-    df = df.drop(columns=['ic_deduplicated'])
-    return df
+        data.loc[data["ticket_id"] == t, "ic_deduplicated"] = ic_deduplicated
+    data.to_csv('out.csv')
+    data["content"] = data['ic_deduplicated']
+    data = data.drop(columns=['ic_deduplicated'])
+    return data

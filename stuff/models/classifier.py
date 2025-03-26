@@ -2,8 +2,7 @@ import typing as t
 import abc
 from sklearn.base import ClassifierMixin
 from sklearn.metrics import classification_report
-from .data import Dataset
-
+from ..data.data import Dataset
 
 class BaseClassifier(abc.ABC):
 
@@ -24,7 +23,7 @@ class BaseClassifier(abc.ABC):
         self._check()
         return self.classifier.predict(X)
 
-    def evaluate(self):
+    def evaluate(self, dict = False) -> t.Union[str, dict]:
         self._check()
         y_pred = self.classifier.predict(self.dataset.X_test)
-        return classification_report(self.dataset.y_test, y_pred)
+        return classification_report(self.dataset.y_test, y_pred, output_dict=dict)

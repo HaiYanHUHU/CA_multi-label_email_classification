@@ -8,7 +8,7 @@ from utils import ObjectEncoder
 
 class Dataset:
 
-    def __init__(self, df: pd.DataFrame, x: t.Union[t.Iterable[str], str], y: str = 'y', split: float = 0.2):
+    def __init__(self, df: pd.DataFrame, x: t.Union[t.Iterable[str], str], split: float = 0.2):
         """
 
         :param df: pd.DataFrame source of all data
@@ -22,7 +22,6 @@ class Dataset:
 
         assert len(df[df[list(self.x)].isna().any(axis=1)]) == 0, "nan values in x columns"
 
-        self.y = y
         self.split_ = split
         self.vectorisers = {}
         self.obj_encoders = {}
@@ -31,7 +30,7 @@ class Dataset:
         self.y_train = None
         self.y_test = None
 
-    def tuplefy(self, cols: tuple[str]) -> None:
+    def tuplefy(self, cols: tuple[str]) -> ObjectEncoder:
         """
         transforms columns into a tuple, then into an integer
 
@@ -42,6 +41,8 @@ class Dataset:
         tuples = list(zip(*(self.df[col] for col in cols)))
         self.df['y'] = oe.fit_transform(tuples)
         self.obj_encoders[cols] = oe
+
+        return oe
 
     def detuplefy(self, orig: tuple[str], encoded: int) -> tuple:
         """

@@ -1,8 +1,6 @@
-import typing as t
-
 from sklearn.ensemble import RandomForestClassifier
 
-from ..classifier import BaseClassifier
+from .classifier import BaseClassifier
 from ..data import Dataset
 
 

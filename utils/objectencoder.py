@@ -23,3 +23,6 @@ class ObjectEncoder:
 
     def fit_transform(self, X: t.Iterator[object]) -> list:
         return self.fit(X).transform(X)
+
+    def inverse_transform(self, X: t.Iterator[int]) -> list:
+        return [self.classes_[x] for x in X]

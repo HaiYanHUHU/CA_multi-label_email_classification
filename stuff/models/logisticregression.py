@@ -1,4 +1,4 @@
-from ..classifier import BaseClassifier
+from .classifier import BaseClassifier
 from ..data import Dataset
 
 from sklearn.linear_model import LogisticRegression
