@@ -1,5 +1,5 @@
 from sklearn.neural_network import MLPClassifier
-from ..classifier import BaseClassifier
+from .classifier import BaseClassifier
 from ..data import Dataset
 
 class DNN(BaseClassifier):

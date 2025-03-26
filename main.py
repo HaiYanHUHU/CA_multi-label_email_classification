@@ -1,6 +1,6 @@
 from stuff.data import get_input_data, pre_process
 from stuff import Dataset
-from stuff.models import RandomF, Logistic
+from stuff.models import RandomF, Logistic, DNN
 from utils import decode_classification_report, print_classification_report
 import warnings
 
@@ -18,16 +18,15 @@ def main():
         ds.vectorise("content", 5000)
         ds.split()
 
-        clf = RandomF(ds, n_estimators=10000)
-        #clf = Logistic(ds)
-        #clf = HierarchicalClassifier(RandomF)
+        classifiers = [RandomF(ds, n_estimators=10000), Logistic(ds), DNN(ds, (512,))]
 
-        clf.train()
+        for clf in classifiers:
+            clf.train()
 
-        print('Evaluation for ' + y1 + ', ' + clf.name)
+            print('Evaluation for ' + y1 + ', ' + clf.name)
 
-        dc = decode_classification_report(clf.evaluate(dict=True), enc)
-        print_classification_report(dc)
+            dc = decode_classification_report(clf.evaluate(dict=True), enc)
+            print_classification_report(dc)
 
 if __name__ == '__main__':
     main()
