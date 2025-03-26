@@ -6,13 +6,6 @@ from sklearn.metrics import classification_report
 
 
 class BaseModel(ABC):
-    """
-    The third and final feature that architecture should allow is to implement multiple ML models in such a way that the model-level
-    behavioral differences (e.g., differences in training and testing codes related to each model) should be hidden from the controller. In
-    other words, all the modeling-related functionalities should be able to access using a consistent interface (e.g., a set of methods) no
-    matter how different each model is in terms of their coding for those functionalities.
-    """
-
     def __init__(self) -> None:
         ...
 
